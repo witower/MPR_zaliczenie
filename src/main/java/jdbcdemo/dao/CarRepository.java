@@ -8,7 +8,7 @@ import java.util.List;
 import jdbcdemo.domain.Car;
 import jdbcdemo.domain.Person;
 
-public class CarRepository extends RepositoryBase {
+public class CarRepository extends RepositoryBase<Car> {
 	
 	public CarRepository(){
 		super();
@@ -90,5 +90,19 @@ public class CarRepository extends RepositoryBase {
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void setupInsert(Car entity) throws SQLException {
+		insert.setString(1, entity.getBrand());
+		insert.setString(2, entity.getRegistration());
+	}
+
+	@Override
+	protected void setupUpdate(Car entity) throws SQLException {
+		update.setString(1, entity.getBrand());
+		update.setString(2, entity.getRegistration());
+		update.setInt(3, entity.getId());
+		update.executeUpdate();
 	}
 }

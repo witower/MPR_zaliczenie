@@ -7,7 +7,11 @@ import java.util.List;
 
 import jdbcdemo.domain.Person;
 
-public class PersonRepository extends RepositoryBase {
+public class PersonRepository extends RepositoryBase<Person> {
+	
+	public PersonRepository(){
+		super();
+	}
 	
 	@Override
 	protected String tableName() {
@@ -28,21 +32,35 @@ public class PersonRepository extends RepositoryBase {
 	protected String insertSql() {
 		return "INSERT INTO person(name,surname,age) VALUES (?,?,?)";
 	}
+	
 	@Override
 	protected String updateSql() {
 		return "UPDATE person SET (name, surname, age) = (?,?,?) WHERE id=?";
 	}
+	
 	@Override
 	protected String deleteSql() {
 		return "DELETE FROM person WHERE id=?";
 	}
+	
 	@Override
 	protected String selectAllSql() {
 		return "SELECT * FROM person";
 	}
 	
-	public PersonRepository(){
-		super();
+	@Override
+	protected void setupInsert(Person entity) throws SQLException {
+		insert.setString(1, entity.getName());
+		insert.setString(2, entity.getSurname());
+		insert.setInt(3, entity.getAge());
+	}
+
+	@Override
+	protected void setupUpdate(Person entity) throws SQLException {
+		update.setString(1, entity.getName());
+		update.setString(2, entity.getSurname());
+		update.setInt(3, entity.getAge());
+		update.setInt(4, entity.getId());
 	}
 	
 	public List<Person> getAll(){
@@ -61,39 +79,5 @@ public class PersonRepository extends RepositoryBase {
 			e.printStackTrace();
 		}
 		return result;
-	}
-	
-	public void add(Person person){
-		try{
-			insert.setString(1, person.getName());
-			insert.setString(2, person.getSurname());
-			insert.setInt(3, person.getAge());
-			insert.executeUpdate();
-		}catch(SQLException ex){
-			ex.printStackTrace();
-		}
-	}
-	
-	public void update(Person person) {
-
-		try{
-			update.setString(1, person.getName());
-			update.setString(2, person.getSurname());
-			update.setInt(3, person.getAge());
-			update.setInt(4, person.getId());
-			update.executeUpdate();
-		}catch(SQLException ex){
-			ex.printStackTrace();
-		}
-	}
-	
-	public void delete(Person person) {
-
-		try{
-			delete.setInt(1, person.getId());
-			delete.executeUpdate();
-		}catch(SQLException ex){
-			ex.printStackTrace();
-		}
 	}
 }

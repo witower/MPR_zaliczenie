@@ -1,6 +1,6 @@
 package jdbcdemo.domain;
 
-public class Person {
+public class Person implements IHaveId{
 
 	private int id;
 	private String name;

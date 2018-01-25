@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class RepositoryBase {
+import jdbcdemo.domain.IHaveId;
+
+public abstract class RepositoryBase<TEntity extends IHaveId> {
 	
 	protected Connection connection;
 	protected Statement createTable;
@@ -35,6 +37,8 @@ public abstract class RepositoryBase {
 	protected abstract String updateSql();
 	protected abstract String deleteSql();
 	protected abstract String selectAllSql();
+	protected abstract void setupUpdate(TEntity entity) throws SQLException;
+	protected abstract void setupInsert(TEntity entity) throws SQLException;
 	
 	public void createTable(){
 		try {
@@ -51,6 +55,33 @@ public abstract class RepositoryBase {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void delete(TEntity entity) {
+		try{
+			delete.setInt(1, entity.getId());
+			delete.executeUpdate();
+		}catch(SQLException ex){
+			ex.printStackTrace();
+		}
+	}
+	
+	public void add(TEntity entity){
+		try{
+			setupInsert(entity); //Metoda abstrakcyjna, implementacja w podklasie dba o treść
+			insert.executeUpdate();
+		}catch(SQLException ex){
+			ex.printStackTrace();
+		}
+	}
+
+	public void update(TEntity entity) {
+		try{
+			setupUpdate(entity); //Metoda abstrakcyjna, implementacja w podklasie dba o treść
+			update.executeUpdate();
+		}catch(SQLException ex){
+			ex.printStackTrace();
 		}
 	}
 }
