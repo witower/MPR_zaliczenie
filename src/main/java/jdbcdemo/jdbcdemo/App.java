@@ -13,6 +13,8 @@ public class App
 {
     public static void main( String[] args )
     {
+    	System.out.println( "Początek" );
+    	
     	PersonRepository repo = new PersonRepository();
     	repo.createTable();
     	
@@ -30,7 +32,5 @@ public class App
     				+ p.getSurname()+"\t"
     				+ p.getAge());
     	}
-    	
-        System.out.println( "Koniec" );
     }
 }
