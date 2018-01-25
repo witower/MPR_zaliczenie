@@ -5,13 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.domain.Car;
 import jdbcdemo.domain.Person;
 
 public class CarRepository extends RepositoryBase<Car> {
 	
-	public CarRepository(){
-		super();
+	public CarRepository(ResultSetMapper<Car> mapper){
+		super(mapper);
 	}
 	
 	@Override

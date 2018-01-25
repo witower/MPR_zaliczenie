@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.domain.IHaveId;
 
 public abstract class RepositoryBase<TEntity extends IHaveId> {
@@ -18,7 +21,10 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 	protected PreparedStatement update;
 	protected PreparedStatement delete;
 	
-	public RepositoryBase(){
+	private ResultSetMapper<TEntity> mapper;
+	
+	public RepositoryBase(ResultSetMapper<TEntity> mapper){
+		this.mapper = mapper;
 		try {
 			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/workdb", "SA", "");
 			createTable = connection.createStatement();
@@ -83,5 +89,18 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
+	}
+	
+	public List<TEntity> getAll(){
+		List<TEntity> result = new ArrayList<TEntity>();
+		try {
+			ResultSet rs = selectAll.executeQuery();
+			while(rs.next()){
+				result.add(mapper.map(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

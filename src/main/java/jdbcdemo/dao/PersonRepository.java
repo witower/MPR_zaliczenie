@@ -5,12 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.domain.Person;
 
 public class PersonRepository extends RepositoryBase<Person> {
 	
-	public PersonRepository(){
-		super();
+	public PersonRepository(ResultSetMapper<Person> mapper){
+		super(mapper);
 	}
 	
 	@Override

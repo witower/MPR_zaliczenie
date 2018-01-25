@@ -3,6 +3,7 @@ package jdbcdemo.jdbcdemo;
 import java.util.List;
 
 import jdbcdemo.dao.PersonRepository;
+import jdbcdemo.dao.mappers.PersonResultMapper;
 import jdbcdemo.domain.Person;
 
 /**
@@ -15,7 +16,9 @@ public class App
     {
     	System.out.println( "Początek" );
     	
-    	PersonRepository repo = new PersonRepository();
+    	PersonResultMapper mapkier = new PersonResultMapper();
+    	
+		PersonRepository repo = new PersonRepository(mapkier);
     	repo.createTable();
     	
     	Person janek = new Person();
