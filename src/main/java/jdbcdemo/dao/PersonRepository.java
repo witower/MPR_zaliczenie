@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import jdbcdemo.dao.mappers.ResultSetMapper;
+import jdbcdemo.dao.uow.UnitOfWork;
 import jdbcdemo.domain.Person;
 
 public class PersonRepository extends RepositoryBase<Person> {
 	
-	public PersonRepository(Connection connection, ResultSetMapper<Person> mapper) throws SQLException{
-		super(connection, mapper);
+	public PersonRepository(Connection connection, ResultSetMapper<Person> mapper, UnitOfWork uow) throws SQLException{
+		super(connection, mapper, uow);
 	}
 	
 	@Override

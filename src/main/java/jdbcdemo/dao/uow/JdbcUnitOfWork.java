@@ -3,7 +3,6 @@ package jdbcdemo.dao.uow;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class JdbcUnitOfWork implements UnitOfWork {

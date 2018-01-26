@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import jdbcdemo.dao.mappers.ResultSetMapper;
+import jdbcdemo.dao.uow.UnitOfWork;
 import jdbcdemo.domain.Car;
 
 public class CarRepository extends RepositoryBase<Car> {
 	
-	public CarRepository(Connection connection, ResultSetMapper<Car> mapper) throws SQLException{
-		super(connection, mapper);
+	public CarRepository(Connection connection, ResultSetMapper<Car> mapper, UnitOfWork uow) throws SQLException{
+		super(connection, mapper, uow);
 	}
 	
 	@Override

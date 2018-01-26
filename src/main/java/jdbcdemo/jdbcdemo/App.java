@@ -19,10 +19,12 @@ public class App
     	
 		try {
 			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/workdb", "SA", "");
-			repo = new RepositoryCatalog(connection);
 		} catch (SQLException e) {
 			e.printStackTrace();
-}
+		}
+		
+		repo = new RepositoryCatalog(connection); //nie widze powodu, żeby to było w w/w trycatchu
+		
 		// Jak już się połączyłem to mogę produkować reposy 
     	Repository<Person> peopleRepo = repo.people();;
     	Repository<Car> carsRepo = repo.cars();

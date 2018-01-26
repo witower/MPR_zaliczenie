@@ -10,14 +10,14 @@ import java.util.List;
 
 import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.dao.uow.Entity;
+import jdbcdemo.dao.uow.UnitOfWork;
 import jdbcdemo.dao.uow.UnitOfWorkRepository;
 import jdbcdemo.domain.IHaveId;
 
 public abstract class RepositoryBase<TEntity extends IHaveId> 
-	implements Repository<TEntity>, UnitOfWorkRepository
-
+implements Repository<TEntity>, UnitOfWorkRepository
 {
-	
+
 	protected Connection connection;
 	protected Statement createTable;
 	protected PreparedStatement insert;
@@ -26,13 +26,20 @@ public abstract class RepositoryBase<TEntity extends IHaveId>
 	protected PreparedStatement delete;
 	
 	private ResultSetMapper<TEntity> mapper;
+	UnitOfWork uow;
 	
-	protected RepositoryBase(Connection connection, ResultSetMapper<TEntity> mapper) throws SQLException{
+	protected RepositoryBase (
+			Connection connection, 
+			ResultSetMapper<TEntity> mapper,
+			UnitOfWork uow
+	) throws SQLException {
 		this.mapper = mapper;
-		try {
-			this.connection = connection;
-			createTable = connection.createStatement();
-			insert = connection.prepareStatement(insertSql()); //precompiled if driver supports it
+		this.uow = uow;
+		this.connection = connection; // jest już po trycatchu, więc wynoszę poza
+		createTable = connection.createStatement(); //to nie potrzebuje trycatcha?
+		
+		try {  // prepareStatement prekomipule się łącząc z bazą, więc trycatch
+			insert = connection.prepareStatement(insertSql());
 			update = connection.prepareStatement(updateSql());
 			delete = connection.prepareStatement(deleteSql());
 			selectAll = connection.prepareStatement(selectAllSql());
@@ -96,15 +103,21 @@ public abstract class RepositoryBase<TEntity extends IHaveId>
 	}
 	
 	public void delete(TEntity entity) {
-		
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		uow.markAsDeleted(ent);
 	}
 	
 	public void add(TEntity entity) {
-		
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		uow.markAsNew(ent);
 	}
 	
 	public void update(TEntity entity) {
-		
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		uow.markAsChanged(ent);
 	}
 	
 	public List<TEntity> getAll(){
