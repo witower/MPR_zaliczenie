@@ -106,18 +106,21 @@ implements Repository<TEntity>, UnitOfWorkRepository
 	
 	public void delete(TEntity entity) {
 		Entity ent = new Entity();
+		ent.setRepository(this);
 		ent.setEntity(entity);
 		uow.markAsDeleted(ent);
 	}
 	
 	public void add(TEntity entity) {
 		Entity ent = new Entity();
+		ent.setRepository(this);
 		ent.setEntity(entity);
 		uow.markAsNew(ent);
 	}
 	
 	public void update(TEntity entity) {
 		Entity ent = new Entity();
+		ent.setRepository(this);
 		ent.setEntity(entity);
 		uow.markAsChanged(ent);
 	}

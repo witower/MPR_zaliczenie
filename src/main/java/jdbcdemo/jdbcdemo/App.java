@@ -3,6 +3,7 @@ package jdbcdemo.jdbcdemo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import jdbcdemo.dao.*;
 import jdbcdemo.dao.uow.UnitOfWork;
@@ -26,52 +27,47 @@ public class App
     	System.out.println( "Zapisywanie zmian" );
     	workdb.saveChanges();
     	
-    	System.out.println( "TABELE:" );
-    	System.out.println( "Ludzie:" );
+    	System.out.println( "Wyświetlanie tabel" );
+    	
+    	System.out.println( "\t Ludzie:" );
     	System.out.println(workdb.people().toString());
     	
-    	System.out.println( "Auta:" );
+    	System.out.println( "\t Auta:" );
     	System.out.println(workdb.cars().toString());
     	
-/*
-    	// Deklaruje przed try/catch bo inaczej nie widoczne w dalszej części
-		Connection connection = null;
-		UnitOfWork uow;
-		RepositoryCatalog repo = null;
+    	System.out.println( "\t Telefony:" );
+    	System.out.println(workdb.cellphones().toString());
+
+    	System.out.println( "Edycja rekordów" );
+    	Person personToUpdate = new Person("Jasiek", "Kowal***", 99);
+    	personToUpdate.setId(0);
+    	workdb.people().update(personToUpdate);
+    	workdb.saveChanges();
+
+    	System.out.println( "Wyświetlanie tabel po zmianach" );
+    	List<Person> people = workdb.people().getAll();
     	
-		try {
-			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/workdb", "SA", "");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		repo = new JdbcRepositoryCatalog(connection, uow); //nie widze powodu, żeby to było w w/w trycatchu
-		
-		// Jak już się połączyłem to mogę produkować reposy 
-    	Repository<Person> peopleRepo = repo.people();;
-    	Repository<Car> carsRepo = repo.cars();
-		*/
-		System.out.println( "Wypełnianie przestrzeni" );
-		
-		
-		/*
-    	peopleRepo.add(new Person("Jan", "Kowalski", 30));    	
-    	carsRepo.add(new Car("vw", "GWE 6666"));
+    	System.out.println( "\t Ludzie:" );
+    	for (Person p : people) {
+    		System.out.println(p.getId() + " " 
+    				+ p.getName() + " " 
+    				+ p.getSurname() + " " 
+    				+ p.getAge());
+    	}
     	
-    	Car vw2bmw = new Car("bmw", "GWE 6666");
-    	vw2bmw.setId(0);
     	
-    	carsRepo.update(vw2bmw);
     	
-    	System.out.println( "Ludzie:" );
-    	System.out.println(peopleRepo.toString());
+    	System.out.println( "Usuwanie rekordów" );
+    	Person personToDelete = new Person();
+    	personToDelete.setId(1);
+    	workdb.people().delete(personToDelete);
+    	workdb.saveChanges();
+
+    	System.out.println( "Wyświetlanie tabeli po zmianie" );
+    	System.out.println( "\t Ludzie:" );
+    	System.out.println(workdb.people().toString());
     	
-    	System.out.println( "Auta:" );
-    	System.out.println(carsRepo.toString());
-    	*/
     	System.out.println( "Zakończenie" );
-    	
-    	
     	
     }
 }
