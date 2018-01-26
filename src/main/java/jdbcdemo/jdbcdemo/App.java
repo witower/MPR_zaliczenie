@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import jdbcdemo.dao.*;
+import jdbcdemo.dao.uow.UnitOfWork;
 import jdbcdemo.domain.*;
 
 public class App 
@@ -12,9 +13,14 @@ public class App
     public static void main( String[] args ) throws SQLException
     {
     	System.out.println( "Inicjalizacja" );
-
+    	
+    	RepositoryCatalog workdb = new JdbcCatalogFactory().HsqlDbWorkDb();
+    	workdb.people().createTable();
+    	workdb.cars().add(new Car("vw", "GWE 6666"));
+/*
     	// Deklaruje przed try/catch bo inaczej nie widoczne w dalszej części
 		Connection connection = null;
+		UnitOfWork uow;
 		RepositoryCatalog repo = null;
     	
 		try {
@@ -23,14 +29,16 @@ public class App
 			e.printStackTrace();
 		}
 		
-		repo = new RepositoryCatalog(connection); //nie widze powodu, żeby to było w w/w trycatchu
+		repo = new JdbcRepositoryCatalog(connection, uow); //nie widze powodu, żeby to było w w/w trycatchu
 		
 		// Jak już się połączyłem to mogę produkować reposy 
     	Repository<Person> peopleRepo = repo.people();;
     	Repository<Car> carsRepo = repo.cars();
-		
+		*/
 		System.out.println( "Wypełnianie przestrzeni" );
 		
+		
+		/*
     	peopleRepo.add(new Person("Jan", "Kowalski", 30));    	
     	carsRepo.add(new Car("vw", "GWE 6666"));
     	
@@ -44,7 +52,7 @@ public class App
     	
     	System.out.println( "Auta:" );
     	System.out.println(carsRepo.toString());
-    	
+    	*/
     	System.out.println( "Zakończenie" );
     	
     	

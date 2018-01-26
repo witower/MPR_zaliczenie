@@ -39,6 +39,8 @@ implements Repository<TEntity>, UnitOfWorkRepository
 		createTable = connection.createStatement(); //to nie potrzebuje trycatcha?
 		
 		try {  // prepareStatement prekomipule się łącząc z bazą, więc trycatch
+			//bez tego trycatcha nie można utworzyc tabeli, przez błąd prekompilacji prepareStatement
+			//pyta o tablę np. Person, której jeszcze nie ma
 			insert = connection.prepareStatement(insertSql());
 			update = connection.prepareStatement(updateSql());
 			delete = connection.prepareStatement(deleteSql());
