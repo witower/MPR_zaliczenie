@@ -17,9 +17,6 @@ public class JdbcRepositoryCatalog implements RepositoryCatalog {
 		this.uow = uow;
 	}
 
-	/* (non-Javadoc)
-	 * @see jdbcdemo.dao.RepositoryCatalog#people()
-	 */
 	public Repository<Person> people() {
 		try {
 			return new PersonRepository(connection, new PersonResultMapper(), uow);
@@ -30,9 +27,6 @@ public class JdbcRepositoryCatalog implements RepositoryCatalog {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see jdbcdemo.dao.RepositoryCatalog#cars()
-	 */
 	public Repository<Car> cars() {
 		try {
 			return new CarRepository(connection, new CarResultMapper(), uow);
@@ -41,11 +35,18 @@ public class JdbcRepositoryCatalog implements RepositoryCatalog {
 			return null;
 		}
 	}
+
+	public Repository<Cellphone> cellphones() {
+		try {
+			return new CellphoneRepository(connection, new CellphoneResultMapper(), uow);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
-	/* (non-Javadoc)
-	 * @see jdbcdemo.dao.RepositoryCatalog#saveChanges()
-	 */
 	public void saveChanges() {
 		uow.saveChanges();
 	}
+
 }
