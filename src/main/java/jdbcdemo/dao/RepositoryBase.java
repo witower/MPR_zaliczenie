@@ -1,7 +1,6 @@
 package jdbcdemo.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.util.List;
 import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.domain.IHaveId;
 
-public abstract class RepositoryBase<TEntity extends IHaveId> {
+public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity>{
 	
 	protected Connection connection;
 	protected Statement createTable;
@@ -23,12 +22,12 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 	
 	private ResultSetMapper<TEntity> mapper;
 	
-	public RepositoryBase(ResultSetMapper<TEntity> mapper){
+	protected RepositoryBase(Connection connection, ResultSetMapper<TEntity> mapper) throws SQLException{
 		this.mapper = mapper;
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/workdb", "SA", "");
+			this.connection = connection;
 			createTable = connection.createStatement();
-			insert = connection.prepareStatement(insertSql());
+			insert = connection.prepareStatement(insertSql()); //precompiled if driver supports it
 			update = connection.prepareStatement(updateSql());
 			delete = connection.prepareStatement(deleteSql());
 			selectAll = connection.prepareStatement(selectAllSql());
@@ -103,4 +102,16 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 		}
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		List<TEntity> all = getAll();
+		for (TEntity e : all){
+    		s = s + e.toString() + "\n";
+    	}
+		return s;
+	}
+	
+	
 }

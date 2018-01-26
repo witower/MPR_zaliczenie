@@ -7,6 +7,14 @@ public class Person implements IHaveId{
 	private String surname;
 	private int age;
 	
+	public Person(){};
+	
+	public Person(String name, String surname, int age) {
+		this.name = name;
+		this.surname = surname;
+		this.age = age;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -30,6 +38,11 @@ public class Person implements IHaveId{
 	}
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	@Override
+	public String toString() {
+		return id + "\t" + name + "\t" + surname + "\t" + age;
 	}
 	
 	

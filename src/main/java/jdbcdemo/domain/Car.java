@@ -6,6 +6,13 @@ public class Car implements IHaveId{
 	private String brand;
 	private String registration;
 	
+	public Car(){};
+	
+	public Car(String brand, String reg) {
+		this.brand = brand;
+		this.registration = reg;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -23,6 +30,11 @@ public class Car implements IHaveId{
 	}
 	public void setRegistration(String registration) {
 		this.registration = registration;
+	}
+	
+	@Override
+	public String toString() {
+		return id + "\t" + brand + "\t" + registration;
 	}
 	
 }

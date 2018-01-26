@@ -1,39 +1,51 @@
 package jdbcdemo.jdbcdemo;
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-import jdbcdemo.dao.PersonRepository;
-import jdbcdemo.dao.mappers.PersonResultMapper;
-import jdbcdemo.domain.Person;
+import jdbcdemo.dao.*;
+import jdbcdemo.domain.*;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws SQLException
     {
-    	System.out.println( "Początek" );
+    	System.out.println( "Inicjalizacja" );
+
+    	// Deklaruje przed try/catch bo inaczej nie widoczne w dalszej części
+		Connection connection = null;
+		RepositoryCatalog repo = null;
     	
-    	PersonResultMapper mapkier = new PersonResultMapper();
+		try {
+			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/workdb", "SA", "");
+			repo = new RepositoryCatalog(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+}
+		// Jak już się połączyłem to mogę produkować reposy 
+    	Repository<Person> peopleRepo = repo.people();;
+    	Repository<Car> carsRepo = repo.cars();
+		
+		System.out.println( "Wypełnianie przestrzeni" );
+		
+    	peopleRepo.add(new Person("Jan", "Kowalski", 30));    	
+    	carsRepo.add(new Car("vw", "GWE 6666"));
     	
-		PersonRepository repo = new PersonRepository(mapkier);
-    	repo.createTable();
+    	Car vw2bmw = new Car("bmw", "GWE 6666");
+    	vw2bmw.setId(0);
     	
-    	Person janek = new Person();
-    	janek.setAge(30);
-    	janek.setName("Jan");
-    	janek.setSurname("Kowalski");
+    	carsRepo.update(vw2bmw);
     	
-    	repo.add(janek);
+    	System.out.println( "Ludzie:" );
+    	System.out.println(peopleRepo.toString());
     	
-    	List<Person> people = repo.getAll();
-    	for(Person p : people){
-    		System.out.println(p.getId()+"\t" 
-    				+ p.getName()+"\t"
-    				+ p.getSurname()+"\t"
-    				+ p.getAge());
-    	}
+    	System.out.println( "Auta:" );
+    	System.out.println(carsRepo.toString());
+    	
+    	System.out.println( "Zakończenie" );
+    	
+    	
+    	
     }
 }

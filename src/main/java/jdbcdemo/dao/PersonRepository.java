@@ -1,17 +1,15 @@
 package jdbcdemo.dao;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import jdbcdemo.dao.mappers.ResultSetMapper;
 import jdbcdemo.domain.Person;
 
 public class PersonRepository extends RepositoryBase<Person> {
 	
-	public PersonRepository(ResultSetMapper<Person> mapper){
-		super(mapper);
+	public PersonRepository(Connection connection, ResultSetMapper<Person> mapper) throws SQLException{
+		super(connection, mapper);
 	}
 	
 	@Override
@@ -50,35 +48,17 @@ public class PersonRepository extends RepositoryBase<Person> {
 	}
 	
 	@Override
-	protected void setupInsert(Person entity) throws SQLException {
-		insert.setString(1, entity.getName());
-		insert.setString(2, entity.getSurname());
-		insert.setInt(3, entity.getAge());
+	protected void setupInsert(Person person) throws SQLException {
+		insert.setString(1, person.getName());
+		insert.setString(2, person.getSurname());
+		insert.setInt(3, person.getAge());
 	}
 
 	@Override
-	protected void setupUpdate(Person entity) throws SQLException {
-		update.setString(1, entity.getName());
-		update.setString(2, entity.getSurname());
-		update.setInt(3, entity.getAge());
-		update.setInt(4, entity.getId());
-	}
-	
-	public List<Person> getAll(){
-		List<Person> result = new ArrayList<Person>();
-		try {
-			ResultSet rs = selectAll.executeQuery();
-			while(rs.next()){
-				Person p = new Person();
-				p.setId(rs.getInt("id"));
-				p.setName(rs.getString("name"));
-				p.setSurname(rs.getString("surname"));
-				p.setAge(rs.getInt("age"));
-				result.add(p);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+	protected void setupUpdate(Person person) throws SQLException {
+		update.setString(1, person.getName());
+		update.setString(2, person.getSurname());
+		update.setInt(3, person.getAge());
+		update.setInt(4, person.getId());
 	}
 }

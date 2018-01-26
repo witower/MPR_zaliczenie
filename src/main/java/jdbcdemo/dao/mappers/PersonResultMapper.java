@@ -11,6 +11,7 @@ public class PersonResultMapper implements ResultSetMapper<Person> {
 		Person p = new Person();
 		p.setId(rs.getInt("id"));
 		p.setName(rs.getString("name"));
+		p.setSurname(rs.getString("surname"));
 		p.setAge(rs.getInt("age"));
 		return p;
 	}
