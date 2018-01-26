@@ -13,10 +13,26 @@ public class App
     public static void main( String[] args ) throws SQLException
     {
     	System.out.println( "Inicjalizacja" );
-    	
     	RepositoryCatalog workdb = new JdbcCatalogFactory().HsqlDbWorkDb();
+    	
+    	System.out.println( "Tworzenie tabel" );
     	workdb.people().createTable();
+    	workdb.cars().createTable();
+
+    	System.out.println( "Dodawanie rekordów" );
+    	workdb.people().add(new Person("Jan", "Kowalski", 30));  
     	workdb.cars().add(new Car("vw", "GWE 6666"));
+    	
+    	System.out.println( "Zapisywanie zmian" );
+    	workdb.saveChanges();
+    	
+    	System.out.println( "TABELE:" );
+    	System.out.println( "Ludzie:" );
+    	System.out.println(workdb.people().toString());
+    	
+    	System.out.println( "Auta:" );
+    	System.out.println(workdb.cars().toString());
+    	
 /*
     	// Deklaruje przed try/catch bo inaczej nie widoczne w dalszej części
 		Connection connection = null;

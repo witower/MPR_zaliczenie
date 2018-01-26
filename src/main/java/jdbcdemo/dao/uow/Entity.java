@@ -42,7 +42,7 @@ public class Entity {
 			repository.persistDelete(this);
 			break;
 		case New:
-			repository.persistDelete(this);
+			repository.persistAdd(this);
 			break;
 		default:
 			break;
