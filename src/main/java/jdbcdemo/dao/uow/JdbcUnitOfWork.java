@@ -3,6 +3,7 @@ package jdbcdemo.dao.uow;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class JdbcUnitOfWork implements UnitOfWork {
@@ -16,28 +17,33 @@ public class JdbcUnitOfWork implements UnitOfWork {
 	}
 
 	public void markAsNew(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		entity.setState(EntityState.New);
+		entities.add(entity);
 	}
 
 	public void markAsDeleted(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		entity.setState(EntityState.Deleted);
+		entities.add(entity);
 	}
 
 	public void markAsChanged(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		entity.setState(EntityState.Changed);
+		entities.add(entity);
 	}
 
 	public void saveChanges() {
-		// TODO Auto-generated method stub
-		
+		for(Entity entity : entities)
+			entity.persistChange();
+			try {
+			connection.commit();
+			entities.clear();
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
 	}
 
 	public void rollback() {
-		// TODO Auto-generated method stub
-		
+		entities.clear();
 	}
-s
+
 }
