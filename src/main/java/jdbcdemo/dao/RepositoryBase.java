@@ -9,9 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jdbcdemo.dao.mappers.ResultSetMapper;
+import jdbcdemo.dao.uow.Entity;
+import jdbcdemo.dao.uow.UnitOfWorkRepository;
 import jdbcdemo.domain.IHaveId;
 
-public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity>{
+public abstract class RepositoryBase<TEntity extends IHaveId> 
+	implements Repository<TEntity>, UnitOfWorkRepository
+
+{
 	
 	protected Connection connection;
 	protected Statement createTable;
@@ -63,31 +68,43 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 		}
 	}
 	
-	public void delete(TEntity entity) {
+	public void persistDelete(Entity entity) {
 		try{
-			delete.setInt(1, entity.getId());
+			delete.setInt(1, ((TEntity)entity.getEntity()).getId());
 			delete.executeUpdate();
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
 	}
 	
-	public void add(TEntity entity){
+	public void persistAdd(Entity entity){
 		try{
-			setupInsert(entity); //Metoda abstrakcyjna, implementacja w podklasie dba o treść
+			setupInsert((TEntity)entity.getEntity());
 			insert.executeUpdate();
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
 	}
 
-	public void update(TEntity entity) {
+	public void persistUpdate(Entity entity) {
 		try{
-			setupUpdate(entity); //Metoda abstrakcyjna, implementacja w podklasie dba o treść
+			setupUpdate((TEntity) entity.getEntity());
 			update.executeUpdate();
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
+	}
+	
+	public void delete(TEntity entity) {
+		
+	}
+	
+	public void add(TEntity entity) {
+		
+	}
+	
+	public void update(TEntity entity) {
+		
 	}
 	
 	public List<TEntity> getAll(){
